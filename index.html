@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LATENT DIGITAL PLATFORM — Data Authentication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;900&family=JetBrains+Mono:wght@400;700&family=Source+Code+Pro:wght@700;900&family=Space+Grotesk:wght@400;500&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="stage" id="stage">
+        <img class="bg" src="bg-pc.png" alt="" />
+
+        <header class="login-header">
+          <h1>LATENT DIGITAL PLATFORM</h1>
+          <h2>DATA AUTHENTICATION SYSTEM</h2>
+          <p class="vn-title">HỆ THỐNG XÁC THỰC DỮ LIỆU NỀN TẢNG SỐ TIỀM ẨN</p>
+          <div class="invented-box">
+            <p class="en">INVENTED USING TESLA'S DIGITAL DATA SYSTEM</p>
+            <p class="vn">ĐƯỢC PHÁT MINH BỞI HỆ THỐNG DỮ LIỆU SỐ CỦA TESLA</p>
+          </div>
+        </header>
+
+        <aside class="hud-panel hud-left">
+          <span class="corner corner-tl"></span>
+          <span class="corner corner-br"></span>
+          <p class="bin-soft" id="binTop">
+            0010110 101010 1101 1010 1101<br />1101 0101 0110 1101 0011 0101
+          </p>
+          <div class="status-stack">
+            <p class="status-ok">SYSTEM VERIFIED</p>
+            <p class="status-ok mono">&gt;&gt;&gt; ACCESS GRANTED</p>
+            <p class="status-ok">ENCRYPTION ENABLED</p>
+          </div>
+          <p class="bin-faint" id="binMid">
+            001 0111 1000 0101 0010 0001<br />
+            011 0100 1010 1101 0011 1100<br />
+            001 1111 0010 1101 0010 0011<br />
+            111 1101 1001 1010 1010 0101<br />
+            001 1101 1010 1101 1101 0101<br />
+            001 0111 1000 0101 0010 0001<br />
+            011 0100 1010 1101 0011 1100<br />
+            001 1111 0010 1101 0010 0011<br />
+            111 1101 1001 1010 1010 0101<br />
+            001 1101 1010 1101 1101 0101
+          </p>
+        </aside>
+
+        <aside class="hud-panel hud-right">
+          <span class="corner corner-tl"></span>
+          <span class="corner corner-br"></span>
+          <div class="hud-right-top">
+            <div class="date-block">
+              <p class="label">PROJECT COMPLETION DATE</p>
+              <p class="value">18 JUNE 2026</p>
+            </div>
+          </div>
+          <p class="bin-soft">010 1011 0101 1101 0010 1011</p>
+          <div class="scan-lines" id="scanLines">
+            <p class="scan-line">DATA SCANNING...</p>
+            <p class="scan-line">LATENT DATABASE</p>
+            <p class="scan-line">AI SECURITY CORE</p>
+            <p class="scan-line bin">010 1101 0101 1101 0011 0101</p>
+            <p class="scan-line">VERIFYING...</p>
+            <p class="scan-line">TOKEN VERIFIED</p>
+            <p class="scan-line hot">AES-256 ENCRYPTION</p>
+            <p class="scan-line hot">SHA-512 PROTOCOL</p>
+            <p class="scan-line hot">ACCESS AUTHORIZED</p>
+          </div>
+        </aside>
+
+        <section class="login-box" id="loginBox">
+          <span class="corner corner-tl"></span>
+          <span class="corner corner-br"></span>
+          <h3>KHUNG ĐĂNG NHẬP ADMIN</h3>
+          <form class="login-form" id="loginForm" autocomplete="off">
+            <div class="field">
+              <label for="username">ADMIN USERNAME</label>
+              <input id="username" name="username" type="text" placeholder="Enter admin username" required />
+              <span class="field-icon user">
+                <img src="assets/icons/icon-user.svg" width="9.333" height="9.333" alt="" />
+              </span>
+            </div>
+            <div class="field">
+              <label for="password">PASSWORD</label>
+              <input id="password" name="password" type="password" placeholder="Enter password" required />
+              <span class="field-icon lock">
+                <img src="assets/icons/icon-lock.svg" width="9.333" height="12.25" alt="" />
+              </span>
+            </div>
+            <p class="login-error" id="loginError">ACCESS DENIED — INVALID CREDENTIALS</p>
+            <button class="btn-login" type="submit">LOGIN</button>
+          </form>
+        </section>
+
+        <footer class="stats-row">
+          <div class="stat-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <img class="stat-shield" src="assets/icons/icon-shield.svg" width="17.154" height="21.442" alt="" />
+            <p class="k">SYSTEM STATUS</p>
+            <p class="v sm glow-mint">SECURE</p>
+          </div>
+          <div class="stat-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <p class="k">TOTAL SECURITY</p>
+            <p class="v">98.7%</p>
+            <p class="s">Protected</p>
+          </div>
+          <div class="stat-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <p class="k">DATA INTEGRITY</p>
+            <p class="v">100%</p>
+            <p class="s">Verified</p>
+          </div>
+          <div class="stat-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <p class="k">SYSTEM UPTIME</p>
+            <p class="v">99.99%</p>
+            <p class="s">Online</p>
+          </div>
+          <div class="stat-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <p class="k">THREAT LEVEL</p>
+            <p class="v">LOW</p>
+            <p class="s">No Threats</p>
+          </div>
+          <div class="stat-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <p class="k">ACTIVE SESSIONS</p>
+            <p class="v cyan">256</p>
+            <p class="s">Users Online</p>
+          </div>
+          <div class="stat-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <p class="k">ENCRYPTION</p>
+            <p class="v sm cyan">AES-256</p>
+            <p class="s">Enabled</p>
+          </div>
+          <div class="stat-card ai">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <span class="stat-ai-icon">
+              <img src="assets/icons/icon-ai.svg" width="28.947" height="28.947" alt="" />
+            </span>
+            <p class="k">AI SECURITY CORE</p>
+            <p class="v sm glow-mint">ACTIVE</p>
+            <p class="s tiny">Machine Learning<br />Protection Enabled</p>
+          </div>
+        </footer>
+
+        <div class="vignette"></div>
+        <div class="scanlines"></div>
+      </div>
+    </div>
+    <script src="js/stage.js"></script>
+    <script src="js/auth.js"></script>
+  </body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SYSTEM DATA INPUT PANEL — Latent Digital Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@700;900&family=JetBrains+Mono:wght@400;700&family=Source+Code+Pro:wght@700;900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="stage" id="stage">
+        <img class="bg" src="bg-pc.png" alt="" />
+
+        <main class="home-main">
+          <p class="exclusive">
+            THIS DATA SOFTWARE IS EXCLUSIVELY AVAILABLE FOR THE SEXY BACCARAT PLATFORM.
+          </p>
+
+          <div class="welcome-row">
+            <h1>WELCOME!</h1>
+            <button class="logout-btn" id="logoutBtn" type="button">LOGOUT</button>
+          </div>
+
+          <div class="msg-box">
+            <p>
+              Thank you for placing your trust in our team. On behalf of Tesla, we would like to express
+              our sincere gratitude for your confidence and support.<br />
+              We truly appreciate your trust and look forward to providing you with the best possible experience.
+            </p>
+          </div>
+
+          <h2 class="section-title">SYSTEM RECOMMENDATIONS</h2>
+
+          <div class="msg-box">
+            <p>
+              For optimal system performance, please review and understand the instructions below before proceeding.
+              Enter all required data completely and accurately to ensure the analysis is performed correctly
+              and to achieve the most reliable analytical results.
+            </p>
+          </div>
+
+          <div class="guide-row">
+            <aside class="warn-box">
+              <div class="warn-icons">
+                <svg class="warn-tri" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#f5c518" d="M12 2L23 21H1L12 2Z" />
+                  <path fill="#111" d="M11 9h2v6h-2zm0 7h2v2h-2z" />
+                </svg>
+                <svg class="warn-tri" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="#f5c518" d="M12 2L23 21H1L12 2Z" />
+                  <path fill="#111" d="M11 9h2v6h-2zm0 7h2v2h-2z" />
+                </svg>
+              </div>
+              <h3>IMPORTANT OPERATING GUIDELINES</h3>
+            </aside>
+
+            <div class="guide-list">
+              <span class="corner corner-tl"></span>
+              <span class="corner corner-br"></span>
+              <div class="guide-item">
+                <span class="guide-num">1</span>
+                <p>REFER TO THE GENERAL ANALYSIS SECTION FOR OVERALL DATA.</p>
+                <span></span>
+              </div>
+              <div class="guide-item">
+                <span class="guide-num">2</span>
+                <p>ENTER THE BACCARAT TABLE NUMBER TO CONNECT WITH THE HIGHEST COMPATIBILITY.</p>
+                <button class="check" data-check="table" type="button">✓</button>
+              </div>
+              <div class="guide-item">
+                <span class="guide-num">3</span>
+                <p>ENTER THE RESULTS OF THREE CONSECUTIVE ROUNDS TO ANALYZE THE LATENT COEFFICIENTS.</p>
+                <button class="check" data-check="rounds" type="button">✓</button>
+              </div>
+              <div class="guide-item">
+                <span class="guide-num">4</span>
+                <p>ENTER COMPLETE AND ACCURATE DATA FOR THREE CONSECUTIVE ROUNDS TO PERFORM LATENT COEFFICIENT ANALYSIS.</p>
+                <button class="check" data-check="data" type="button">✓</button>
+              </div>
+            </div>
+          </div>
+
+          <section class="panel">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <h3 class="panel-title">★ SYSTEM DATA INPUT PANEL ★</h3>
+
+            <div class="table-row">
+              <label for="tableNo">TABLE NO.</label>
+              <input id="tableNo" type="text" placeholder="Enter baccarat table number" maxlength="16" />
+              <div class="rounds" id="rounds">
+                <button class="round-chip" data-round="0" type="button">R1 · —</button>
+                <button class="round-chip" data-round="1" type="button">R2 · —</button>
+                <button class="round-chip" data-round="2" type="button">R3 · —</button>
+              </div>
+              <button class="btn-ghost" id="connectBtn" type="button">CONNECT</button>
+            </div>
+
+            <div class="condition-row">
+              <div class="condition-label">CONDITION 1</div>
+              <div class="formula-grid">
+                <div class="cell">
+                  <span class="head">BANKER WIN</span>
+                  <input id="banker" type="number" min="0" max="99" value="0" />
+                </div>
+                <div class="op">+</div>
+                <div class="cell">
+                  <span class="head">PLAYER</span>
+                  <input id="player" type="number" min="0" max="99" value="0" />
+                </div>
+                <div class="op">+</div>
+                <div class="cell">
+                  <span class="head">LATENT FACTOR</span>
+                  <input id="latent" type="number" min="0" max="99" value="0" />
+                </div>
+                <div class="op">=</div>
+                <div class="cell result-cell">
+                  <span class="head">RESULT</span>
+                  <div class="result-out" id="resultOut">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="formula-bar">CÔNG THỨC TẠO RA CƠ SỐ PHỤ (LATENT FACTOR)</div>
+
+            <div class="action-row">
+              <button class="slot-btn active" data-slot="1" type="button">1</button>
+              <button class="slot-btn" data-slot="2" type="button">2</button>
+              <button class="slot-btn" data-slot="3" type="button">3</button>
+              <button class="slot-btn" data-slot="4" type="button">4</button>
+              <button class="btn-ghost" id="resetBtn" type="button">RESET</button>
+              <button class="btn-primary" id="analyzeBtn" type="button">EXECUTE ANALYSIS</button>
+            </div>
+
+            <div class="other-row">
+              <div class="condition-label">OTHER CONDITIONS</div>
+              <div class="stat-pills">
+                <label class="pill">
+                  <span class="k">COMMON PATTERNS</span>
+                  <input id="statPatterns" type="number" min="0" value="5" />
+                </label>
+                <label class="pill">
+                  <span class="k">TOTAL HANDS</span>
+                  <input id="statHands" type="number" min="0" value="6" />
+                </label>
+                <label class="pill">
+                  <span class="k">CARDS DEALT</span>
+                  <input id="statCards" type="number" min="0" value="7" />
+                </label>
+              </div>
+              <div class="beads" id="beads">
+                <div class="bead-col">
+                  <button class="bead cyan" data-bead="0" type="button"></button>
+                  <button class="bead red" data-bead="1" type="button"></button>
+                </div>
+                <div class="bead-col">
+                  <button class="bead cyan" data-bead="2" type="button"></button>
+                  <button class="bead red" data-bead="3" type="button"></button>
+                </div>
+                <div class="bead-col">
+                  <button class="bead cyan" data-bead="4" type="button"></button>
+                  <button class="bead red" data-bead="5" type="button"></button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <aside class="home-side">
+          <div class="matrix-panel">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <canvas id="matrix"></canvas>
+          </div>
+          <div class="hacker-card">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+          </div>
+        </aside>
+
+        <div class="connect-overlay" id="connectOverlay" hidden>
+          <div class="connect-modal">
+            <span class="corner corner-tl"></span>
+            <span class="corner corner-br"></span>
+            <div class="connect-ring"></div>
+            <p class="connect-kicker">TESLA UPLINK PROTOCOL</p>
+            <h4 id="connectTitle">CONNECTING TO TABLE</h4>
+            <p class="connect-table" id="connectTable">TABLE —</p>
+            <div class="connect-bar">
+              <span id="connectBar"></span>
+            </div>
+            <p class="connect-pct" id="connectPct">00%</p>
+            <ul class="connect-logs" id="connectLogs"></ul>
+          </div>
+        </div>
+
+        <div class="vignette"></div>
+        <div class="scanlines"></div>
+      </div>
+    </div>
+    <script src="js/stage.js"></script>
+    <script src="js/home.js"></script>
+  </body>
+</html>
