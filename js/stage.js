@@ -5,9 +5,10 @@
   function resize() {
     const sx = window.innerWidth / 1920;
     const sy = window.innerHeight / 1080;
-    stage.style.transform = "scale(" + Math.min(sx, sy) + ")";
+    stage.style.transform = "scale(" + sx + ", " + sy + ")";
   }
 
   resize();
   window.addEventListener("resize", resize);
 })();
+
