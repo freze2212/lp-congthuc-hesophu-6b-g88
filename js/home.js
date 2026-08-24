@@ -45,9 +45,12 @@ function executeCalculation() {
   const B = Math.round(bRaw);
 
   // TOTAL = A + B
+  // QUY TẮC: CHẴN CON (PLAYER), LẺ CÁI (BANKER)
   const total = A + B;
   const isEven = Math.abs(total) % 2 === 0;
-  const verdict = isEven ? "BANKER" : "PLAYER";
+  const isPlayer = isEven; // Chẵn = Player (Con)
+  const isBanker = !isEven; // Lẻ = Banker (Cái)
+  const verdict = isPlayer ? "PLAYER" : "BANKER";
 
   return {
     win: win,
@@ -60,8 +63,28 @@ function executeCalculation() {
     B: B,
     total: total,
     isEven: isEven,
+    isPlayer: isPlayer,
+    isBanker: isBanker,
     verdict: verdict,
   };
+}
+
+const RANGE_GROUPS = [
+  "4, 5, 6, 7, 8",
+  "5, 6, 7, 8",
+  "6, 7, 8, 9",
+  "7, 8, 9, 10",
+];
+
+function getRandomRange() {
+  return RANGE_GROUPS[Math.floor(Math.random() * RANGE_GROUPS.length)];
+}
+
+function updateSideRange() {
+  const el = document.getElementById("sideRangeVal");
+  if (el) {
+    el.textContent = getRandomRange();
+  }
 }
 
 document.querySelectorAll(".check").forEach(function (btn) {
@@ -138,6 +161,7 @@ function runConnect(table, btn) {
         const finalRate = Math.floor(Math.random() * 16) + 75;
         sideAccRate.textContent = finalRate + "%";
       }
+      updateSideRange();
       setTimeout(function () {
         overlay.hidden = true;
       }, 700);
@@ -153,12 +177,6 @@ if (sideTableInput) {
   });
 }
 
-document.querySelectorAll(".bead").forEach(function (btn) {
-  btn.addEventListener("click", function () {
-    btn.classList.toggle("off");
-  });
-});
-
 function resetAllToZero() {
   document.getElementById("banker").value = 0;
   document.getElementById("player").value = 0;
@@ -167,9 +185,12 @@ function resetAllToZero() {
   if (document.getElementById("slot2")) document.getElementById("slot2").value = 2;
   if (document.getElementById("slot3")) document.getElementById("slot3").value = 3;
   if (document.getElementById("slot4")) document.getElementById("slot4").value = 4;
-  document.getElementById("statPatterns").value = 5;
-  document.getElementById("statHands").value = 6;
-  document.getElementById("statCards").value = 7;
+  if (document.getElementById("statPatterns")) document.getElementById("statPatterns").value = "";
+  if (document.getElementById("statHands")) document.getElementById("statHands").value = "";
+  if (document.getElementById("statCards")) document.getElementById("statCards").value = "";
+  document.querySelectorAll(".bead-input").forEach(function (inp) {
+    inp.value = "";
+  });
   const formulaBar = document.querySelector(".formula-bar");
   if (formulaBar) {
     formulaBar.textContent = "CÔNG THỨC TẠO RA CƠ SỐ PHỤ (LATENT FACTOR)";
@@ -195,15 +216,26 @@ document.getElementById("resetBtn").addEventListener("click", function () {
     const defaultRate = Math.floor(Math.random() * 16) + 75;
     sideAccRate.textContent = defaultRate + "%";
   }
+  updateSideRange();
   document.querySelectorAll(".check").forEach(function (el) {
     el.classList.remove("on");
   });
 });
 
+updateSideRange();
+
+let isAnalyzing = false;
+
 document.getElementById("analyzeBtn").addEventListener("click", function () {
+  if (isAnalyzing) return;
+  isAnalyzing = true;
+  const btn = this;
+  btn.disabled = true;
+
   const data = executeCalculation();
   const formulaBar = document.querySelector(".formula-bar");
   const latentInput = document.getElementById("latent");
+  const resultCell = document.querySelector(".result-cell");
   const resultOut = document.getElementById("resultOut");
 
   // BƯỚC 1: Hiển thị kết quả ra LATENT FACTOR
@@ -214,14 +246,38 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
     formulaBar.textContent = `B = ${data.s1} + (${data.s2} : ${data.s3}) × ${data.s4} = ${data.B}`;
   }
 
-  // BƯỚC 2: Sau đó mới hiển thị ra ô RESULT
-  setTimeout(function () {
+  // BƯỚC 2: Hiệu ứng nhấp nháy tính toán kết quả (Flicker / Calculating Animation)
+  if (resultCell) resultCell.classList.add("calculating");
+  if (resultOut) {
+    resultOut.classList.remove("revealed");
+    resultOut.classList.add("calculating");
+  }
+
+  const flickers = ["CALC...", "SYNC...", "0x8F", "P / B...", "ANALYZING", "SCANNING", "98.4%", "COMPUTING..."];
+  let flickerCount = 0;
+  const flickerInterval = setInterval(function () {
+    flickerCount += 1;
     if (resultOut) {
-      resultOut.textContent = data.verdict;
-      resultOut.style.color = data.isEven ? "#ff7ae8" : "#00ffe5";
+      const randText = flickers[Math.floor(Math.random() * flickers.length)];
+      resultOut.textContent = randText;
+      resultOut.style.color = flickerCount % 2 === 0 ? "#ff2bd6" : "#00ffe5";
     }
+  }, 90);
+
+  // Sau 1.2s nhấp nháy tính toán -> Xuất kết quả chính thức
+  setTimeout(function () {
+    clearInterval(flickerInterval);
+    if (resultCell) resultCell.classList.remove("calculating");
+
+    if (resultOut) {
+      resultOut.classList.remove("calculating");
+      resultOut.classList.add("revealed");
+      resultOut.textContent = data.verdict;
+      resultOut.style.color = data.isPlayer ? "#00ffe5" : "#ff7ae8";
+    }
+
     if (formulaBar) {
-      formulaBar.textContent = `A (${data.A}) + B (${data.B}) = ${data.total} → ${data.isEven ? "CHẴN (BANKER)" : "LẺ (PLAYER)"}`;
+      formulaBar.textContent = `A (${data.A}) + B (${data.B}) = ${data.total} → ${data.isPlayer ? "CHẴN (PLAYER)" : "LẺ (BANKER)"}`;
     }
     document.querySelector('[data-check="data"]').classList.add("on");
 
@@ -231,16 +287,18 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
       if (modal) {
         document.getElementById("rmValA").textContent = `${data.win} - ${data.lose} = ${data.A}`;
         document.getElementById("rmValB").textContent = `${data.s1} + (${data.s2} : ${data.s3}) × ${data.s4} = ${data.B}`;
-        document.getElementById("rmValTotal").textContent = `${data.A} + ${data.B} = ${data.total} (${data.isEven ? "CHẴN" : "LẺ"})`;
+        document.getElementById("rmValTotal").textContent = `${data.A} + ${data.B} = ${data.total} (${data.isPlayer ? "CHẴN" : "LẺ"})`;
 
         const verdictBox = document.getElementById("rmVerdictBox");
-        verdictBox.className = "rm-verdict " + (data.isEven ? "banker" : "player");
-        document.getElementById("rmVerdictName").textContent = data.isEven ? "BANKER WIN" : "PLAYER WIN";
+        verdictBox.className = "rm-verdict " + (data.isPlayer ? "player" : "banker");
+        document.getElementById("rmVerdictName").textContent = data.isPlayer ? "PLAYER WIN" : "BANKER WIN";
 
         modal.hidden = false;
       }
+      isAnalyzing = false;
+      btn.disabled = false;
     }, 450);
-  }, 350);
+  }, 1200);
 });
 
 const closeResultBtn = document.getElementById("closeResultBtn");

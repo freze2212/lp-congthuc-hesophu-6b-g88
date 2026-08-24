@@ -139,7 +139,10 @@
         <div class="sidebar-table-card">
           <span class="corner corner-tl"></span>
           <span class="corner corner-br"></span>
-          <div class="st-header">CONNECT TO BACCARAT TABLE</div>
+          <div class="st-header">
+            <span class="st-live-dot"></span>
+            CONNECT TO BACCARAT TABLE
+          </div>
           <div class="st-table-input-row">
             <span class="st-prefix">BACARAT</span>
             <input class="st-input" id="sideTableInput" type="text" value="C06" placeholder="C06" maxlength="12" />
@@ -157,7 +160,11 @@
           </div>
           <div class="st-section">
             <div class="st-subhead">RECOMMENDED NUMBER<br />OF SUCCESSFUL HANDS</div>
-            <div class="st-range">RANGE</div>
+            <div class="st-range" id="sideRangeVal">4, 5, 6, 7, 8</div>
+          </div>
+          <div class="st-footer-status">
+            <span class="st-foot-icon">⚡</span>
+            <span>AI NEURAL ENGINE • RUNNING</span>
           </div>
         </div>
       </nav>
@@ -279,29 +286,29 @@
             <div class="stat-pills">
               <label class="pill">
                 <span class="k">COMMON PATTERNS</span>
-                <input id="statPatterns" type="number" min="0" value="5" />
+                <input id="statPatterns" type="number" min="0" value="" placeholder="" />
               </label>
               <label class="pill">
                 <span class="k">TOTAL HANDS</span>
-                <input id="statHands" type="number" min="0" value="6" />
+                <input id="statHands" type="number" min="0" value="" placeholder="" />
               </label>
               <label class="pill">
                 <span class="k">CARDS DEALT</span>
-                <input id="statCards" type="number" min="0" value="7" />
+                <input id="statCards" type="number" min="0" value="" placeholder="" />
               </label>
             </div>
             <div class="beads" id="beads">
               <div class="bead-col">
-                <button class="bead cyan" data-bead="0" type="button"></button>
-                <button class="bead red" data-bead="1" type="button"></button>
+                <input class="bead-input cyan" id="bead0" type="number" min="0" max="99" value="" placeholder="" />
+                <input class="bead-input red" id="bead1" type="number" min="0" max="99" value="" placeholder="" />
               </div>
               <div class="bead-col">
-                <button class="bead cyan" data-bead="2" type="button"></button>
-                <button class="bead red" data-bead="3" type="button"></button>
+                <input class="bead-input cyan" id="bead2" type="number" min="0" max="99" value="" placeholder="" />
+                <input class="bead-input red" id="bead3" type="number" min="0" max="99" value="" placeholder="" />
               </div>
               <div class="bead-col">
-                <button class="bead cyan" data-bead="4" type="button"></button>
-                <button class="bead red" data-bead="5" type="button"></button>
+                <input class="bead-input cyan" id="bead4" type="number" min="0" max="99" value="" placeholder="" />
+                <input class="bead-input red" id="bead5" type="number" min="0" max="99" value="" placeholder="" />
               </div>
             </div>
           </div>
