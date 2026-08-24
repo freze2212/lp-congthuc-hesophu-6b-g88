@@ -350,3 +350,63 @@ if (closeResultBtn) {
     });
   });
 })();
+
+(function hackerTerminal() {
+  const container = document.getElementById("hackerStream");
+  if (!container) return;
+
+  const logs = [
+    { t: "> [INIT] tesla_core_bcr.bin loaded", c: "ok" },
+    { t: "> [SYNC] table RF stream: 5.48 GHz", c: "info" },
+    { t: "> [LATENT] matrix A+B factorized", c: "hot" },
+    { t: "> [HASH] 0x9F4C2A1E verified", c: "hex" },
+    { t: "> [DEEP_NET] node #7 latency 1.4ms", c: "info" },
+    { t: "> [SCAN] delta variance: 0.0031", c: "" },
+    { t: "> [AES-256] uplink tunnel established", c: "ok" },
+    { t: "> [CORE] 16 threads computing...", c: "info" },
+    { t: "> [BUFFER] 128-bit checksum: PASS", c: "ok" },
+    { t: "> [AI] latent resonance locked 100%", c: "hot" },
+    { t: "> [SYS] handshake token: valid", c: "ok" },
+    { t: "> [TELEMETRY] package 0xAA42 synced", c: "hex" },
+    { t: "> [RNG] dynamic bias check: 99.8%", c: "info" },
+    { t: "> [FEED] live socket streaming...", c: "" },
+    { t: "> [ALGO] predictive vector matched", c: "hot" },
+    { t: "> [OPT] memory pool purged: 0 leaks", c: "ok" },
+    { t: "> [DIAG] GPU compute cluster active", c: "info" },
+    { t: "> [WARN] frequency variance corrected", c: "warn" },
+    { t: "> [SYNC] baccarat latent state: READY", c: "hot" },
+  ];
+
+  let index = 0;
+  const maxLines = 7;
+
+  function addLog() {
+    const item = logs[index % logs.length];
+    index += 1;
+
+    const line = document.createElement("div");
+    line.className = "hc-line" + (item.c ? " " + item.c : "");
+    line.textContent = item.t;
+    container.appendChild(line);
+
+    while (container.children.length > maxLines) {
+      container.removeChild(container.firstChild);
+    }
+  }
+
+  // Khởi tạo trước một vài dòng log
+  for (let i = 0; i < 5; i++) {
+    addLog();
+  }
+
+  // Tự động nhảy log liên tục ngẫu nhiên từ 800ms - 1600ms
+  function scheduleNext() {
+    const delay = Math.floor(Math.random() * 800) + 800;
+    setTimeout(function () {
+      addLog();
+      scheduleNext();
+    }, delay);
+  }
+
+  scheduleNext();
+})();
