@@ -18,72 +18,39 @@ document.querySelectorAll(".nav-item").forEach(function (btn) {
   });
 });
 
-const CYCLE = ["—", "B", "P", "T"];
-const rounds = [0, 0, 0];
-let activeSlot = 1;
-const slots = {
-  1: { banker: 0, player: 0, latent: 0 },
-  2: { banker: 0, player: 0, latent: 0 },
-  3: { banker: 0, player: 0, latent: 0 },
-  4: { banker: 0, player: 0, latent: 0 },
-};
-
 function executeCalculation() {
-  const win = Number(document.getElementById("banker").value) || 0;
-  const lose = Number(document.getElementById("player").value) || 0;
   const s1 = Number(document.getElementById("slot1")?.value) || 0;
   const s2 = Number(document.getElementById("slot2")?.value) || 0;
   const s3 = Number(document.getElementById("slot3")?.value) || 1;
   const s4 = Number(document.getElementById("slot4")?.value) || 0;
 
-  // A = WIN - LOSE
-  const A = win - lose;
-
-  // B = ô thứ 1 + ô thứ 2 : ô thứ 3 x ô thứ 4, làm tròn ra số tự nhiên
   const divisor = s3 === 0 ? 1 : s3;
-  const bRaw = s1 + (s2 / divisor) * s4;
-  const B = Math.round(bRaw);
-
-  // TOTAL = A + B
-  // QUY TẮC: CHẴN CON (PLAYER), LẺ CÁI (BANKER)
-  const total = A + B;
-  const isEven = Math.abs(total) % 2 === 0;
-  const isPlayer = isEven; // Chẵn = Player (Con)
-  const isBanker = !isEven; // Lẻ = Banker (Cái)
-  const verdict = isPlayer ? "PLAYER" : "BANKER";
+  const latentRaw = s1 + (s2 / divisor) * s4;
+  const latent = Math.round(latentRaw);
 
   return {
-    win: win,
-    lose: lose,
-    A: A,
     s1: s1,
     s2: s2,
     s3: s3,
     s4: s4,
-    B: B,
-    total: total,
-    isEven: isEven,
-    isPlayer: isPlayer,
-    isBanker: isBanker,
-    verdict: verdict,
+    latent: latent,
   };
 }
 
-const RANGE_GROUPS = [
-  "4, 5, 6, 7, 8",
-  "5, 6, 7, 8",
-  "6, 7, 8, 9",
-  "7, 8, 9, 10",
-];
-
-function getRandomRange() {
-  return RANGE_GROUPS[Math.floor(Math.random() * RANGE_GROUPS.length)];
+function getRandomPair() {
+  const nums = [6, 7, 8, 9];
+  const a = nums[Math.floor(Math.random() * nums.length)];
+  const larger = nums.filter(function (n) {
+    return n > a;
+  });
+  const b = larger[Math.floor(Math.random() * larger.length)];
+  return a + "-" + b;
 }
 
 function updateSideRange() {
   const el = document.getElementById("sideRangeVal");
   if (el) {
-    el.textContent = getRandomRange();
+    el.textContent = getRandomPair();
   }
 }
 
@@ -178,9 +145,6 @@ if (sideTableInput) {
 }
 
 function resetAllToZero() {
-  document.getElementById("banker").value = 0;
-  document.getElementById("player").value = 0;
-  document.getElementById("latent").value = 0;
   if (document.getElementById("slot1")) document.getElementById("slot1").value = 1;
   if (document.getElementById("slot2")) document.getElementById("slot2").value = 2;
   if (document.getElementById("slot3")) document.getElementById("slot3").value = 3;
@@ -199,7 +163,10 @@ function resetAllToZero() {
   if (out) {
     out.textContent = "—";
     out.style.color = "var(--cyan)";
+    out.classList.remove("calculating", "revealed");
   }
+  const resultCell = document.querySelector(".result-cell");
+  if (resultCell) resultCell.classList.remove("calculating");
 }
 
 document.getElementById("resetBtn").addEventListener("click", function () {
@@ -234,26 +201,24 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
 
   const data = executeCalculation();
   const formulaBar = document.querySelector(".formula-bar");
-  const latentInput = document.getElementById("latent");
   const resultCell = document.querySelector(".result-cell");
   const resultOut = document.getElementById("resultOut");
+  const calcDelay = Math.floor(Math.random() * 1000) + 4000;
 
-  // BƯỚC 1: Hiển thị kết quả ra LATENT FACTOR
-  if (latentInput) {
-    latentInput.value = data.B;
-  }
   if (formulaBar) {
-    formulaBar.textContent = `B = ${data.s1} + (${data.s2} : ${data.s3}) × ${data.s4} = ${data.B}`;
+    formulaBar.textContent =
+      "ĐANG TÍNH: " + data.s1 + " + (" + data.s2 + " : " + data.s3 + ") × " + data.s4 + " ...";
   }
 
-  // BƯỚC 2: Hiệu ứng nhấp nháy tính toán kết quả (Flicker / Calculating Animation)
   if (resultCell) resultCell.classList.add("calculating");
   if (resultOut) {
     resultOut.classList.remove("revealed");
     resultOut.classList.add("calculating");
+    resultOut.textContent = "CALC...";
+    resultOut.style.color = "#00ffe5";
   }
 
-  const flickers = ["CALC...", "SYNC...", "0x8F", "P / B...", "ANALYZING", "SCANNING", "98.4%", "COMPUTING..."];
+  const flickers = ["CALC...", "SYNC...", "0x8F", "MATRIX", "ANALYZING", "SCANNING", "98.4%", "COMPUTING..."];
   let flickerCount = 0;
   const flickerInterval = setInterval(function () {
     flickerCount += 1;
@@ -262,9 +227,8 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
       resultOut.textContent = randText;
       resultOut.style.color = flickerCount % 2 === 0 ? "#ff2bd6" : "#00ffe5";
     }
-  }, 90);
+  }, 120);
 
-  // Sau 1.2s nhấp nháy tính toán -> Xuất kết quả chính thức
   setTimeout(function () {
     clearInterval(flickerInterval);
     if (resultCell) resultCell.classList.remove("calculating");
@@ -272,33 +236,34 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
     if (resultOut) {
       resultOut.classList.remove("calculating");
       resultOut.classList.add("revealed");
-      resultOut.textContent = data.verdict;
-      resultOut.style.color = data.isPlayer ? "#00ffe5" : "#ff7ae8";
+      resultOut.textContent = String(data.latent);
+      resultOut.style.color = "#00ffe5";
     }
 
     if (formulaBar) {
-      formulaBar.textContent = `A (${data.A}) + B (${data.B}) = ${data.total} → ${data.isPlayer ? "CHẴN (PLAYER)" : "LẺ (BANKER)"}`;
+      formulaBar.textContent =
+        data.s1 + " + (" + data.s2 + " : " + data.s3 + ") × " + data.s4 + " = " + data.latent;
     }
     document.querySelector('[data-check="data"]').classList.add("on");
 
-    // BƯỚC 3: Hiển thị Popup Modal Result
     setTimeout(function () {
       const modal = document.getElementById("resultModal");
       if (modal) {
-        document.getElementById("rmValA").textContent = `${data.win} - ${data.lose} = ${data.A}`;
-        document.getElementById("rmValB").textContent = `${data.s1} + (${data.s2} : ${data.s3}) × ${data.s4} = ${data.B}`;
-        document.getElementById("rmValTotal").textContent = `${data.A} + ${data.B} = ${data.total} (${data.isPlayer ? "CHẴN" : "LẺ"})`;
+        document.getElementById("rmValCoeffs").textContent =
+          data.s1 + " + (" + data.s2 + " : " + data.s3 + ") × " + data.s4;
+        document.getElementById("rmValLatent").textContent = String(data.latent);
 
         const verdictBox = document.getElementById("rmVerdictBox");
-        verdictBox.className = "rm-verdict " + (data.isPlayer ? "player" : "banker");
-        document.getElementById("rmVerdictName").textContent = data.isPlayer ? "PLAYER WIN" : "BANKER WIN";
+        verdictBox.className = "rm-verdict latent";
+        document.getElementById("rmVerdictName").textContent = String(data.latent);
+        document.getElementById("rmVerdictSub").textContent = "KẾT QUẢ LATENT FACTOR";
 
         modal.hidden = false;
       }
       isAnalyzing = false;
       btn.disabled = false;
-    }, 450);
-  }, 1200);
+    }, 400);
+  }, calcDelay);
 });
 
 const closeResultBtn = document.getElementById("closeResultBtn");
@@ -358,7 +323,7 @@ if (closeResultBtn) {
   const logs = [
     { t: "> [INIT] tesla_core_bcr.bin loaded", c: "ok" },
     { t: "> [SYNC] table RF stream: 5.48 GHz", c: "info" },
-    { t: "> [LATENT] matrix A+B factorized", c: "hot" },
+    { t: "> [LATENT] matrix factorized", c: "hot" },
     { t: "> [HASH] 0x9F4C2A1E verified", c: "hex" },
     { t: "> [DEEP_NET] node #7 latency 1.4ms", c: "info" },
     { t: "> [SCAN] delta variance: 0.0031", c: "" },
@@ -394,12 +359,10 @@ if (closeResultBtn) {
     }
   }
 
-  // Khởi tạo trước một vài dòng log
   for (let i = 0; i < 5; i++) {
     addLog();
   }
 
-  // Tự động nhảy log liên tục ngẫu nhiên từ 800ms - 1600ms
   function scheduleNext() {
     const delay = Math.floor(Math.random() * 800) + 800;
     setTimeout(function () {

@@ -1117,6 +1117,10 @@ input {
   align-items: stretch;
 }
 
+.formula-grid-extended {
+  grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr 28px 1fr;
+}
+
 .cell {
   min-height: 70px;
   border: 1px solid rgba(0, 255, 229, 0.4);
@@ -1955,6 +1959,12 @@ input {
   box-shadow: 0 0 30px rgba(56, 189, 248, 0.35);
 }
 
+.rm-verdict.latent {
+  background: rgba(78, 222, 163, 0.12);
+  border-color: #4edea3;
+  box-shadow: 0 0 30px rgba(78, 222, 163, 0.35);
+}
+
 .rm-verdict-name {
   font-family: "Source Code Pro", "Space Grotesk", monospace;
   font-size: 30px;
@@ -1970,6 +1980,11 @@ input {
 .rm-verdict.player .rm-verdict-name {
   color: #00ffe5;
   text-shadow: 0 0 18px rgba(0, 255, 229, 0.9);
+}
+
+.rm-verdict.latent .rm-verdict-name {
+  color: #7dffb8;
+  text-shadow: 0 0 18px rgba(125, 255, 184, 0.9);
 }
 
 .rm-verdict-sub {

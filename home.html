@@ -160,7 +160,7 @@
           </div>
           <div class="st-section">
             <div class="st-subhead">RECOMMENDED NUMBER<br />OF SUCCESSFUL HANDS</div>
-            <div class="st-range" id="sideRangeVal">4, 5, 6, 7, 8</div>
+            <div class="st-range" id="sideRangeVal">6-7</div>
           </div>
           <div class="st-footer-status">
             <span class="st-foot-icon">⚡</span>
@@ -246,24 +246,29 @@
 
           <div class="condition-row">
             <div class="condition-label">CONDITION 1</div>
-            <div class="formula-grid">
+            <div class="formula-grid formula-grid-extended">
               <div class="cell">
-                <span class="head">WIN</span>
-                <input id="banker" type="number" min="0" max="99" value="0" />
-              </div>
-              <div class="op">-</div>
-              <div class="cell">
-                <span class="head">LOSE</span>
-                <input id="player" type="number" min="0" max="99" value="0" />
+                <span class="head">HỆ SỐ PHỤ 1</span>
+                <input id="slot1" type="number" min="0" max="99" value="1" />
               </div>
               <div class="op">+</div>
               <div class="cell">
-                <span class="head">LATENT FACTOR</span>
-                <input id="latent" type="number" min="0" max="99" value="0" />
+                <span class="head">HỆ SỐ PHỤ 2</span>
+                <input id="slot2" type="number" min="0" max="99" value="2" />
+              </div>
+              <div class="op">:</div>
+              <div class="cell">
+                <span class="head">HỆ SỐ PHỤ 3</span>
+                <input id="slot3" type="number" min="0" max="99" value="3" />
+              </div>
+              <div class="op">×</div>
+              <div class="cell">
+                <span class="head">HỆ SỐ PHỤ 4</span>
+                <input id="slot4" type="number" min="0" max="99" value="4" />
               </div>
               <div class="op">=</div>
               <div class="cell result-cell">
-                <span class="head">RESULT</span>
+                <span class="head">LATENT FACTOR</span>
                 <div class="result-out" id="resultOut">—</div>
               </div>
             </div>
@@ -272,12 +277,6 @@
           <div class="formula-bar">CÔNG THỨC TẠO RA CƠ SỐ PHỤ (LATENT FACTOR)</div>
 
           <div class="action-row">
-            <div class="slot-inputs">
-              <input class="slot-input" id="slot1" type="number" min="0" max="99" value="1" placeholder="1" />
-              <input class="slot-input" id="slot2" type="number" min="0" max="99" value="2" placeholder="2" />
-              <input class="slot-input" id="slot3" type="number" min="0" max="99" value="3" placeholder="3" />
-              <input class="slot-input" id="slot4" type="number" min="0" max="99" value="4" placeholder="4" />
-            </div>
             <button class="btn-ghost" id="resetBtn" type="button">RESET</button>
           </div>
 
@@ -365,22 +364,18 @@
           
           <div class="rm-calc-box">
             <div class="rm-calc-line">
-              <span class="calc-tag">A (WIN - LOSE):</span>
-              <span class="calc-val" id="rmValA">0 - 0 = 0</span>
-            </div>
-            <div class="rm-calc-line">
-              <span class="calc-tag">B (LATENT FACTOR):</span>
-              <span class="calc-val" id="rmValB">1 + (2 : 3) × 4 = 4</span>
+              <span class="calc-tag">HỆ SỐ PHỤ:</span>
+              <span class="calc-val" id="rmValCoeffs">1 + (2 : 3) × 4</span>
             </div>
             <div class="rm-calc-line highlight">
-              <span class="calc-tag">TOTAL (A + B):</span>
-              <span class="calc-val" id="rmValTotal">0 + 4 = 4 (CHẴN)</span>
+              <span class="calc-tag">LATENT FACTOR:</span>
+              <span class="calc-val" id="rmValLatent">4</span>
             </div>
           </div>
 
-          <div class="rm-verdict banker" id="rmVerdictBox">
-            <div class="rm-verdict-name" id="rmVerdictName">BANKER WIN</div>
-            <div class="rm-verdict-sub" id="rmVerdictSub">DỰ ĐOÁN KẾT QUẢ VÒNG TIẾP THEO</div>
+          <div class="rm-verdict latent" id="rmVerdictBox">
+            <div class="rm-verdict-name" id="rmVerdictName">4</div>
+            <div class="rm-verdict-sub" id="rmVerdictSub">KẾT QUẢ LATENT FACTOR</div>
           </div>
 
           <button class="btn-primary rm-btn" id="closeResultBtn" type="button">XÁC NHẬN &amp; TIẾP TỤC</button>
