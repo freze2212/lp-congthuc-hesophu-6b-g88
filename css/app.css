@@ -872,7 +872,22 @@ input {
   height: 1024px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 6px;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 229, 0.35) transparent;
+}
+
+.home-main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.home-main::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 229, 0.35);
+  border-radius: 3px;
 }
 
 .home-side {
@@ -1069,11 +1084,10 @@ input {
 
 .panel {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto;
   background: var(--panel-strong);
   border: 1px solid rgba(255, 43, 214, 0.35);
-  padding: 18px 22px 20px;
+  padding: 14px 18px 16px;
   backdrop-filter: blur(10px);
   box-shadow: 0 0 24px rgba(255, 43, 214, 0.12), inset 0 0 40px rgba(0, 255, 229, 0.04);
 }
@@ -1094,7 +1108,7 @@ input {
   grid-template-columns: 128px 1fr;
   gap: 12px;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .condition-label {
@@ -1234,13 +1248,6 @@ input {
   }
 }
 
-.other-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-
 .stat-pills {
   display: flex;
   gap: 14px;
@@ -1361,6 +1368,191 @@ input {
   color: #031525;
   border-color: #ff2bd6;
   box-shadow: 0 0 18px rgba(255, 43, 214, 0.95);
+}
+
+.formula-display-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.formula-display {
+  border: 1px solid rgba(0, 255, 229, 0.45);
+  background: rgba(0, 20, 70, 0.5);
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.formula-display.calculating {
+  border-color: rgba(255, 43, 214, 0.65);
+  background: rgba(255, 43, 214, 0.08);
+  animation: formulaPulse 0.18s ease-in-out infinite alternate;
+}
+
+.result-cell.flickering {
+  animation: resultPulse 0.22s ease-in-out infinite alternate;
+}
+
+.formula-display.flickering {
+  border-color: rgba(78, 222, 163, 0.75);
+  box-shadow: 0 0 18px rgba(78, 222, 163, 0.35);
+  animation: formulaPulse 0.22s ease-in-out infinite alternate;
+}
+
+.formula-tag {
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  color: var(--pink-soft);
+  font-weight: 700;
+}
+
+.formula-text {
+  font-family: "Source Code Pro", "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--cyan);
+  word-break: break-word;
+}
+
+@keyframes formulaPulse {
+  0% {
+    filter: brightness(0.85);
+    box-shadow: 0 0 8px rgba(255, 43, 214, 0.25);
+  }
+  100% {
+    filter: brightness(1.15);
+    box-shadow: 0 0 20px rgba(0, 255, 229, 0.45);
+  }
+}
+
+.result-out-wrap {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 36px;
+}
+
+.calc-spinner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(0, 255, 229, 0.2);
+  border-top-color: var(--cyan);
+  border-right-color: var(--pink);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.cond2-result {
+  min-width: 120px;
+  min-height: 92px;
+}
+
+.other-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 14px;
+  align-items: stretch;
+}
+
+.dual-result-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0 18px;
+}
+
+.dual-result-section.flickering .result-table-card {
+  animation: formulaPulse 0.22s ease-in-out infinite alternate;
+}
+
+.result-table-card {
+  border: 1px solid rgba(78, 222, 163, 0.45);
+  background: rgba(0, 20, 70, 0.55);
+  padding: 12px 14px;
+  text-align: center;
+}
+
+.result-table-card h4 {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--pink-soft);
+  margin-bottom: 8px;
+}
+
+.result-table-formula {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--cyan);
+  min-height: 34px;
+  margin-bottom: 10px;
+}
+
+.result-table-val {
+  font-family: "Source Code Pro", "Be Vietnam Pro", monospace;
+  font-size: 28px;
+  font-weight: 900;
+  color: #7dffb8;
+  text-shadow: 0 0 16px rgba(125, 255, 184, 0.75);
+}
+
+.rm-dual-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rm-dual-tables.flickering .rm-table-card.is-active {
+  animation: formulaPulse 0.22s ease-in-out infinite alternate;
+}
+
+.rm-table-card.is-empty {
+  opacity: 0.45;
+}
+
+.rm-table-card.is-empty .rm-table-val {
+  font-size: 14px;
+  color: #94a3b8;
+  text-shadow: none;
+}
+
+.rm-table-card {
+  border: 1px solid rgba(78, 222, 163, 0.5);
+  background: rgba(0, 15, 55, 0.65);
+  padding: 14px 12px;
+  border-radius: 4px;
+}
+
+.rm-table-card h4 {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #f472b6;
+  margin-bottom: 8px;
+}
+
+.rm-table-formula {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #94a3b8;
+  min-height: 32px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.rm-table-val {
+  font-family: "Source Code Pro", monospace;
+  font-size: 32px;
+  font-weight: 900;
+  color: #7dffb8;
+  text-shadow: 0 0 18px rgba(125, 255, 184, 0.85);
 }
 
 .formula-bar {
@@ -1829,7 +2021,9 @@ input {
 .btn-execute-large {
   width: 100%;
   height: 52px;
-  margin-top: 14px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
   font-size: 15px;
   font-weight: 900;
   letter-spacing: 2px;
@@ -1870,7 +2064,7 @@ input {
 
 .result-modal {
   position: relative;
-  width: 540px;
+  width: min(640px, 92vw);
   background: linear-gradient(180deg, #13072b 0%, #060e29 60%, #020617 100%);
   border: 1.5px solid #d946ef;
   box-shadow: 0 0 50px rgba(217, 70, 239, 0.4), 0 0 80px rgba(37, 99, 235, 0.25);

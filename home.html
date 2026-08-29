@@ -96,7 +96,7 @@
                 d="M12 4v3.2M12 16.8V20M4 12h3.2M16.8 12H20M6.4 6.4l2.3 2.3M15.3 15.3l2.3 2.3M17.6 6.4l-2.3 2.3M8.7 15.3l-2.3 2.3"
                 fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
             </svg>
-            <span>AI ANALYTICS</span>
+            <span>AI ANALYTICS</span> 
           </button>
           <button class="nav-item" type="button" data-nav="settings">
             <svg class="nav-ico" viewBox="0 0 24 24" aria-hidden="true">
@@ -267,47 +267,64 @@
                 <input id="slot4" type="number" min="0" max="99" value="4" />
               </div>
               <div class="op">=</div>
-              <div class="cell result-cell">
+              <div class="cell result-cell" id="resultCell1">
                 <span class="head">LATENT FACTOR</span>
-                <div class="result-out" id="resultOut">—</div>
+                <div class="result-out-wrap">
+                  <span class="calc-spinner" id="spinner1" hidden></span>
+                  <div class="result-out" id="resultOut1">—</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="formula-bar">CÔNG THỨC TẠO RA CƠ SỐ PHỤ (LATENT FACTOR)</div>
-
-          <div class="action-row">
-            <button class="btn-ghost" id="resetBtn" type="button">RESET</button>
+          <div class="formula-display-row">
+            <div class="formula-display" id="formulaBox1">
+              <span class="formula-tag">CÔNG THỨC 1</span>
+              <span class="formula-text" id="formulaText1">HỆ SỐ PHỤ = α + (β ÷ γ) × δ</span>
+            </div>
+            <div class="formula-display" id="formulaBox2">
+              <span class="formula-tag">CÔNG THỨC 2</span>
+              <span class="formula-text" id="formulaText2">HỆ SỐ PHỤ = (A + B) − (C ÷ π) + (D ÷ 6) × √e</span>
+            </div>
           </div>
 
-          <div class="other-row">
-            <div class="condition-label">OTHER CONDITIONS</div>
-            <div class="stat-pills">
-              <label class="pill">
-                <span class="k">COMMON PATTERNS</span>
-                <input id="statPatterns" type="number" min="0" value="" placeholder="" />
-              </label>
-              <label class="pill">
-                <span class="k">TOTAL HANDS</span>
-                <input id="statHands" type="number" min="0" value="" placeholder="" />
-              </label>
-              <label class="pill">
-                <span class="k">CARDS DEALT</span>
-                <input id="statCards" type="number" min="0" value="" placeholder="" />
-              </label>
-            </div>
-            <div class="beads" id="beads">
-              <div class="bead-col">
-                <input class="bead-input cyan" id="bead0" type="number" min="0" max="99" value="" placeholder="" />
-                <input class="bead-input red" id="bead1" type="number" min="0" max="99" value="" placeholder="" />
+          <div class="condition-row">
+            <div class="condition-label">CONDITION 2</div>
+            <div class="other-row">
+              <div class="stat-pills">
+                <label class="pill">
+                  <span class="k">COMMON PATTERNS (A)</span>
+                  <input id="statPatterns" type="number" min="0" value="" placeholder="" />
+                </label>
+                <label class="pill">
+                  <span class="k">TOTAL HANDS (B)</span>
+                  <input id="statHands" type="number" min="0" value="" placeholder="" />
+                </label>
+                <label class="pill">
+                  <span class="k">CARDS DEALT (C)</span>
+                  <input id="statCards" type="number" min="0" value="" placeholder="" />
+                </label>
               </div>
-              <div class="bead-col">
-                <input class="bead-input cyan" id="bead2" type="number" min="0" max="99" value="" placeholder="" />
-                <input class="bead-input red" id="bead3" type="number" min="0" max="99" value="" placeholder="" />
+              <div class="beads" id="beads">
+                <div class="bead-col">
+                  <input class="bead-input cyan" id="bead0" type="number" min="0" max="99" value="" placeholder="" />
+                  <input class="bead-input red" id="bead1" type="number" min="0" max="99" value="" placeholder="" />
+                </div>
+                <div class="bead-col">
+                  <input class="bead-input cyan" id="bead2" type="number" min="0" max="99" value="" placeholder="" />
+                  <input class="bead-input red" id="bead3" type="number" min="0" max="99" value="" placeholder="" />
+                </div>
+                <div class="bead-col">
+                  <input class="bead-input cyan" id="bead4" type="number" min="0" max="99" value="" placeholder="" />
+                  <input class="bead-input red" id="bead5" type="number" min="0" max="99" value="" placeholder="" />
+                </div>
               </div>
-              <div class="bead-col">
-                <input class="bead-input cyan" id="bead4" type="number" min="0" max="99" value="" placeholder="" />
-                <input class="bead-input red" id="bead5" type="number" min="0" max="99" value="" placeholder="" />
+              <div class="cell result-cell cond2-result" id="resultCell2">
+                <span class="head">LATENT FACTOR</span>
+                <div class="result-out-wrap">
+                  <span class="calc-spinner" id="spinner2" hidden></span>
+                  <div class="result-out" id="resultOut2">—</div>
+                </div>
               </div>
             </div>
           </div>
@@ -360,25 +377,22 @@
           <span class="corner corner-tl"></span>
           <span class="corner corner-br"></span>
           <div class="rm-kicker">AI LATENT ANALYSIS PROTOCOL</div>
-          <h3 class="rm-title" id="rmTitle">ANALYSIS COMPLETE</h3>
+          <h3 class="rm-title" id="rmTitle">ĐANG PHÂN TÍCH...</h3>
           
-          <div class="rm-calc-box">
-            <div class="rm-calc-line">
-              <span class="calc-tag">HỆ SỐ PHỤ:</span>
-              <span class="calc-val" id="rmValCoeffs">1 + (2 : 3) × 4</span>
+          <div class="rm-dual-tables" id="rmDualTables">
+            <div class="rm-table-card" id="rmCard1">
+              <h4>CONDITION 1</h4>
+              <p class="rm-table-formula" id="rmFormula1">—</p>
+              <div class="rm-table-val" id="rmVal1">···</div>
             </div>
-            <div class="rm-calc-line highlight">
-              <span class="calc-tag">LATENT FACTOR:</span>
-              <span class="calc-val" id="rmValLatent">4</span>
+            <div class="rm-table-card" id="rmCard2">
+              <h4>CONDITION 2</h4>
+              <p class="rm-table-formula" id="rmFormula2">—</p>
+              <div class="rm-table-val" id="rmVal2">···</div>
             </div>
           </div>
 
-          <div class="rm-verdict latent" id="rmVerdictBox">
-            <div class="rm-verdict-name" id="rmVerdictName">4</div>
-            <div class="rm-verdict-sub" id="rmVerdictSub">KẾT QUẢ LATENT FACTOR</div>
-          </div>
-
-          <button class="btn-primary rm-btn" id="closeResultBtn" type="button">XÁC NHẬN &amp; TIẾP TỤC</button>
+          <button class="btn-primary rm-btn" id="closeResultBtn" type="button" hidden>XÁC NHẬN &amp; TIẾP TỤC</button>
         </div>
       </div>
 

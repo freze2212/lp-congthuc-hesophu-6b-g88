@@ -1,5 +1,10 @@
 const SESSION_KEY = "bcr_admin_session";
 
+const FORMULA_IDLE_1 = "HỆ SỐ PHỤ = α + (β ÷ γ) × δ";
+const FORMULA_IDLE_2 = "HỆ SỐ PHỤ = (A + B) − (C ÷ π) + (D ÷ 6) × √e";
+const CALC_SPIN_MS = 4000;
+const REVEAL_FLICKER_MS = 3500;
+
 if (!sessionStorage.getItem(SESSION_KEY)) {
   window.location.replace("index.html");
 }
@@ -18,15 +23,21 @@ document.querySelectorAll(".nav-item").forEach(function (btn) {
   });
 });
 
-function executeCalculation() {
+function getBeadSum() {
+  let sum = 0;
+  document.querySelectorAll(".bead-input").forEach(function (inp) {
+    sum += Number(inp.value) || 0;
+  });
+  return sum;
+}
+
+function executeCalculation1() {
   const s1 = Number(document.getElementById("slot1")?.value) || 0;
   const s2 = Number(document.getElementById("slot2")?.value) || 0;
   const s3 = Number(document.getElementById("slot3")?.value) || 1;
   const s4 = Number(document.getElementById("slot4")?.value) || 0;
-
   const divisor = s3 === 0 ? 1 : s3;
-  const latentRaw = s1 + (s2 / divisor) * s4;
-  const latent = Math.round(latentRaw);
+  const latent = Math.round(s1 + (s2 / divisor) * s4);
 
   return {
     s1: s1,
@@ -34,6 +45,57 @@ function executeCalculation() {
     s3: s3,
     s4: s4,
     latent: latent,
+    formula:
+      s1 + " + (" + s2 + " ÷ " + s3 + ") × " + s4 + " = " + latent,
+    formulaLong:
+      "HỆ SỐ PHỤ = " +
+      s1 +
+      " + (" +
+      s2 +
+      " ÷ " +
+      s3 +
+      ") × " +
+      s4 +
+      " = " +
+      latent,
+  };
+}
+
+function executeCalculation2() {
+  const a = Number(document.getElementById("statPatterns")?.value) || 0;
+  const b = Number(document.getElementById("statHands")?.value) || 0;
+  const c = Number(document.getElementById("statCards")?.value) || 0;
+  const d = getBeadSum();
+  const latent = Math.round((a + b) - c / Math.PI + (d / 6) * Math.sqrt(Math.E));
+
+  return {
+    a: a,
+    b: b,
+    c: c,
+    d: d,
+    latent: latent,
+    formula:
+      "(" +
+      a +
+      " + " +
+      b +
+      ") − (" +
+      c +
+      " ÷ π) + (" +
+      d +
+      " ÷ 6) × √e = " +
+      latent,
+    formulaLong:
+      "HỆ SỐ PHỤ = (" +
+      a +
+      " + " +
+      b +
+      ") − (" +
+      c +
+      " ÷ π) + (" +
+      d +
+      " ÷ 6) × 2.718 = " +
+      latent,
   };
 }
 
@@ -52,6 +114,83 @@ function updateSideRange() {
   if (el) {
     el.textContent = getRandomPair();
   }
+}
+
+function randomMathFlash() {
+  const ops = ["+", "−", "×", "÷"];
+  const constants = ["π", "e", "√2", "φ", "2.718", "3.14159", "ln(2)", "√5"];
+  const a = Math.floor(Math.random() * 99);
+  const b = Math.floor(Math.random() * 99);
+  const c = Math.floor(Math.random() * 99);
+  const op1 = ops[Math.floor(Math.random() * ops.length)];
+  const op2 = ops[Math.floor(Math.random() * ops.length)];
+  const k = constants[Math.floor(Math.random() * constants.length)];
+  const templates = [
+    a + " " + op1 + " " + b + " " + op2 + " " + k,
+    "(" + a + " ÷ " + b + ") × " + k + " " + op1 + " " + c,
+    k + " × " + a + " " + op2 + " √" + b,
+    "Σ(" + a + "," + b + "," + c + ") " + op1 + " " + k,
+    "Δ" + a + " / " + k + " " + op2 + " " + b,
+  ];
+  return templates[Math.floor(Math.random() * templates.length)] + " ...";
+}
+
+function randomFormulaFlash1(data) {
+  const snippets = [
+    randomMathFlash(),
+    data.s1 + " + (" + data.s2 + " ÷ " + data.s3 + ") × π ...",
+    "α + (β ÷ γ) × δ → " + randomMathFlash(),
+    "(" + data.s2 + " × " + data.s4 + ") ÷ " + data.s3 + " + " + data.s1 + " ...",
+  ];
+  return snippets[Math.floor(Math.random() * snippets.length)];
+}
+
+function randomFormulaFlash2(data) {
+  const snippets = [
+    randomMathFlash(),
+    "(" + data.a + " + " + data.b + ") − (C ÷ π) + √e ...",
+    "A + B − D/π × 2.718 ...",
+    "(" + data.d + " ÷ 6) × √e " + randomMathFlash(),
+  ];
+  return snippets[Math.floor(Math.random() * snippets.length)];
+}
+
+function isCondition2Filled() {
+  const fields = ["statPatterns", "statHands", "statCards"];
+  for (let i = 0; i < fields.length; i += 1) {
+    const val = document.getElementById(fields[i])?.value.trim();
+    if (val) return true;
+  }
+  let hasBead = false;
+  document.querySelectorAll(".bead-input").forEach(function (inp) {
+    if (inp.value.trim()) hasBead = true;
+  });
+  return hasBead;
+}
+
+function setPanelCalculating(active, cond2Filled) {
+  const box1 = document.getElementById("formulaBox1");
+  const box2 = document.getElementById("formulaBox2");
+  const cell1 = document.getElementById("resultCell1");
+  const cell2 = document.getElementById("resultCell2");
+  const spin1 = document.getElementById("spinner1");
+  const spin2 = document.getElementById("spinner2");
+
+  if (box1) box1.classList.toggle("calculating", active);
+  if (box2) box2.classList.toggle("calculating", active && cond2Filled);
+  if (cell1) cell1.classList.toggle("calculating", active);
+  if (cell2) cell2.classList.toggle("calculating", active && cond2Filled);
+  if (spin1) spin1.hidden = !active;
+  if (spin2) spin2.hidden = !active || !cond2Filled;
+}
+
+function setModalFlicker(active) {
+  const tables = document.getElementById("rmDualTables");
+  const card1 = document.getElementById("rmCard1");
+  const card2 = document.getElementById("rmCard2");
+  if (tables) tables.classList.toggle("flickering", active);
+  if (card1) card1.classList.toggle("is-active", active);
+  if (card2) card2.classList.toggle("is-active", active && !card2.classList.contains("is-empty"));
 }
 
 document.querySelectorAll(".check").forEach(function (btn) {
@@ -155,115 +294,181 @@ function resetAllToZero() {
   document.querySelectorAll(".bead-input").forEach(function (inp) {
     inp.value = "";
   });
-  const formulaBar = document.querySelector(".formula-bar");
-  if (formulaBar) {
-    formulaBar.textContent = "CÔNG THỨC TẠO RA CƠ SỐ PHỤ (LATENT FACTOR)";
-  }
-  const out = document.getElementById("resultOut");
-  if (out) {
-    out.textContent = "—";
-    out.style.color = "var(--cyan)";
-    out.classList.remove("calculating", "revealed");
-  }
-  const resultCell = document.querySelector(".result-cell");
-  if (resultCell) resultCell.classList.remove("calculating");
-}
 
-document.getElementById("resetBtn").addEventListener("click", function () {
-  resetAllToZero();
-  if (sideTableInput) sideTableInput.value = "C06";
-  if (sideConnectBtn) {
-    sideConnectBtn.disabled = false;
-    sideConnectBtn.textContent = "CONNECT";
-  }
-  const sideConnPct = document.getElementById("sideConnPct");
-  if (sideConnPct) sideConnPct.textContent = "100%";
-  const sideAccRate = document.getElementById("sideAccRate");
-  if (sideAccRate) {
-    const defaultRate = Math.floor(Math.random() * 16) + 75;
-    sideAccRate.textContent = defaultRate + "%";
-  }
-  updateSideRange();
-  document.querySelectorAll(".check").forEach(function (el) {
-    el.classList.remove("on");
+  const formulaText1 = document.getElementById("formulaText1");
+  const formulaText2 = document.getElementById("formulaText2");
+  if (formulaText1) formulaText1.textContent = FORMULA_IDLE_1;
+  if (formulaText2) formulaText2.textContent = FORMULA_IDLE_2;
+
+  ["resultOut1", "resultOut2"].forEach(function (id) {
+    const out = document.getElementById(id);
+    if (out) {
+      out.textContent = "—";
+      out.style.color = "var(--cyan)";
+      out.classList.remove("calculating", "revealed");
+    }
   });
-});
+
+  ["resultCell1", "resultCell2"].forEach(function (id) {
+    const cell = document.getElementById(id);
+    if (cell) cell.classList.remove("calculating", "flickering");
+  });
+
+  setPanelCalculating(false, false);
+  setModalFlicker(false);
+
+  const closeBtn = document.getElementById("closeResultBtn");
+  if (closeBtn) closeBtn.hidden = false;
+}
 
 updateSideRange();
 
 let isAnalyzing = false;
+let calcIntervals = [];
+
+function clearCalcIntervals() {
+  calcIntervals.forEach(clearInterval);
+  calcIntervals = [];
+}
 
 document.getElementById("analyzeBtn").addEventListener("click", function () {
   if (isAnalyzing) return;
   isAnalyzing = true;
+  clearCalcIntervals();
+
   const btn = this;
   btn.disabled = true;
+  btn.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
-  const data = executeCalculation();
-  const formulaBar = document.querySelector(".formula-bar");
-  const resultCell = document.querySelector(".result-cell");
-  const resultOut = document.getElementById("resultOut");
-  const calcDelay = Math.floor(Math.random() * 1000) + 4000;
+  const data1 = executeCalculation1();
+  const data2 = executeCalculation2();
+  const cond2Filled = isCondition2Filled();
 
-  if (formulaBar) {
-    formulaBar.textContent =
-      "ĐANG TÍNH: " + data.s1 + " + (" + data.s2 + " : " + data.s3 + ") × " + data.s4 + " ...";
+  const formulaText1 = document.getElementById("formulaText1");
+  const formulaText2 = document.getElementById("formulaText2");
+  const resultOut1 = document.getElementById("resultOut1");
+  const resultOut2 = document.getElementById("resultOut2");
+  const modal = document.getElementById("resultModal");
+  const rmTitle = document.getElementById("rmTitle");
+  const closeBtn = document.getElementById("closeResultBtn");
+  const rmCard2 = document.getElementById("rmCard2");
+
+  setModalFlicker(false);
+  setPanelCalculating(true, cond2Filled);
+
+  if (resultOut1) {
+    resultOut1.classList.add("calculating");
+    resultOut1.classList.remove("revealed");
+    resultOut1.textContent = "···";
+    resultOut1.style.color = "#00ffe5";
   }
-
-  if (resultCell) resultCell.classList.add("calculating");
-  if (resultOut) {
-    resultOut.classList.remove("revealed");
-    resultOut.classList.add("calculating");
-    resultOut.textContent = "CALC...";
-    resultOut.style.color = "#00ffe5";
-  }
-
-  const flickers = ["CALC...", "SYNC...", "0x8F", "MATRIX", "ANALYZING", "SCANNING", "98.4%", "COMPUTING..."];
-  let flickerCount = 0;
-  const flickerInterval = setInterval(function () {
-    flickerCount += 1;
-    if (resultOut) {
-      const randText = flickers[Math.floor(Math.random() * flickers.length)];
-      resultOut.textContent = randText;
-      resultOut.style.color = flickerCount % 2 === 0 ? "#ff2bd6" : "#00ffe5";
+  if (resultOut2) {
+    resultOut2.classList.remove("calculating", "revealed");
+    if (cond2Filled) {
+      resultOut2.classList.add("calculating");
+      resultOut2.textContent = "···";
+      resultOut2.style.color = "#7dffb8";
+    } else {
+      resultOut2.textContent = "—";
+      resultOut2.style.color = "var(--cyan)";
     }
-  }, 120);
+  }
+
+  const spinInterval = setInterval(function () {
+    if (formulaText1) formulaText1.textContent = randomFormulaFlash1(data1);
+    if (formulaText2 && cond2Filled) formulaText2.textContent = randomFormulaFlash2(data2);
+  }, 110);
+  calcIntervals.push(spinInterval);
 
   setTimeout(function () {
-    clearInterval(flickerInterval);
-    if (resultCell) resultCell.classList.remove("calculating");
+    clearCalcIntervals();
+    setPanelCalculating(false, false);
 
-    if (resultOut) {
-      resultOut.classList.remove("calculating");
-      resultOut.classList.add("revealed");
-      resultOut.textContent = String(data.latent);
-      resultOut.style.color = "#00ffe5";
+    if (formulaText1) formulaText1.textContent = data1.formulaLong;
+    if (formulaText2) {
+      formulaText2.textContent = cond2Filled ? data2.formulaLong : FORMULA_IDLE_2;
     }
 
-    if (formulaBar) {
-      formulaBar.textContent =
-        data.s1 + " + (" + data.s2 + " : " + data.s3 + ") × " + data.s4 + " = " + data.latent;
+    if (resultOut1) {
+      resultOut1.classList.remove("calculating");
+      resultOut1.classList.add("revealed");
+      resultOut1.textContent = String(data1.latent);
+      resultOut1.style.color = "#00ffe5";
     }
+    if (resultOut2) {
+      resultOut2.classList.remove("calculating");
+      if (cond2Filled) {
+        resultOut2.classList.add("revealed");
+        resultOut2.textContent = String(data2.latent);
+        resultOut2.style.color = "#7dffb8";
+      } else {
+        resultOut2.classList.remove("revealed");
+        resultOut2.textContent = "—";
+        resultOut2.style.color = "var(--cyan)";
+      }
+    }
+
     document.querySelector('[data-check="data"]').classList.add("on");
 
-    setTimeout(function () {
-      const modal = document.getElementById("resultModal");
-      if (modal) {
-        document.getElementById("rmValCoeffs").textContent =
-          data.s1 + " + (" + data.s2 + " : " + data.s3 + ") × " + data.s4;
-        document.getElementById("rmValLatent").textContent = String(data.latent);
+    if (modal) {
+      if (rmTitle) rmTitle.textContent = "ĐANG PHÂN TÍCH...";
+      if (closeBtn) closeBtn.hidden = true;
 
-        const verdictBox = document.getElementById("rmVerdictBox");
-        verdictBox.className = "rm-verdict latent";
-        document.getElementById("rmVerdictName").textContent = String(data.latent);
-        document.getElementById("rmVerdictSub").textContent = "KẾT QUẢ LATENT FACTOR";
+      document.getElementById("rmFormula1").textContent = randomFormulaFlash1(data1);
+      document.getElementById("rmVal1").textContent = randomMathFlash();
 
-        modal.hidden = false;
+      if (rmCard2) {
+        rmCard2.classList.toggle("is-empty", !cond2Filled);
+        rmCard2.classList.toggle("is-active", cond2Filled);
       }
+      if (cond2Filled) {
+        document.getElementById("rmFormula2").textContent = randomFormulaFlash2(data2);
+        document.getElementById("rmVal2").textContent = randomMathFlash();
+      } else {
+        document.getElementById("rmFormula2").textContent = "Chưa nhập dữ liệu";
+        document.getElementById("rmVal2").textContent = "—";
+      }
+
+      setModalFlicker(true);
+      modal.hidden = false;
+
+      const flickerInterval = setInterval(function () {
+        document.getElementById("rmFormula1").textContent =
+          Math.random() > 0.4 ? randomFormulaFlash1(data1) : data1.formula;
+        document.getElementById("rmVal1").textContent =
+          Math.random() > 0.35 ? randomMathFlash() : String(data1.latent);
+
+        if (cond2Filled) {
+          document.getElementById("rmFormula2").textContent =
+            Math.random() > 0.4 ? randomFormulaFlash2(data2) : data2.formula;
+          document.getElementById("rmVal2").textContent =
+            Math.random() > 0.35 ? randomMathFlash() : String(data2.latent);
+        }
+      }, 130);
+      calcIntervals.push(flickerInterval);
+
+      setTimeout(function () {
+        clearCalcIntervals();
+        setModalFlicker(false);
+
+        if (rmTitle) rmTitle.textContent = "ANALYSIS COMPLETE";
+        document.getElementById("rmFormula1").textContent = data1.formula;
+        document.getElementById("rmVal1").textContent = String(data1.latent);
+
+        if (cond2Filled) {
+          document.getElementById("rmFormula2").textContent = data2.formula;
+          document.getElementById("rmVal2").textContent = String(data2.latent);
+        }
+
+        if (closeBtn) closeBtn.hidden = false;
+        isAnalyzing = false;
+        btn.disabled = false;
+      }, REVEAL_FLICKER_MS);
+    } else {
       isAnalyzing = false;
       btn.disabled = false;
-    }, 400);
-  }, calcDelay);
+    }
+  }, CALC_SPIN_MS);
 });
 
 const closeResultBtn = document.getElementById("closeResultBtn");
@@ -271,6 +476,7 @@ if (closeResultBtn) {
   closeResultBtn.addEventListener("click", function () {
     const modal = document.getElementById("resultModal");
     if (modal) modal.hidden = true;
+    setModalFlicker(false);
     resetAllToZero();
   });
 }
