@@ -1373,17 +1373,22 @@ input {
 .formula-display-row {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
 .formula-display {
+  width: 100%;
+  max-width: 920px;
   border: 1px solid rgba(0, 255, 229, 0.45);
   background: rgba(0, 20, 70, 0.5);
-  padding: 10px 14px;
+  padding: 14px 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
@@ -1404,16 +1409,16 @@ input {
 }
 
 .formula-tag {
-  font-size: 10px;
-  letter-spacing: 1.2px;
+  font-size: 11px;
+  letter-spacing: 1.4px;
   color: var(--pink-soft);
   font-weight: 700;
 }
 
 .formula-text {
   font-family: "Source Code Pro", "JetBrains Mono", monospace;
-  font-size: 12.5px;
-  line-height: 1.45;
+  font-size: 15px;
+  line-height: 1.5;
   color: var(--cyan);
   word-break: break-word;
 }
@@ -1505,54 +1510,55 @@ input {
 .rm-dual-tables {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.rm-dual-tables.is-single {
+  grid-template-columns: 1fr;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .rm-dual-tables.flickering .rm-table-card.is-active {
   animation: formulaPulse 0.22s ease-in-out infinite alternate;
 }
 
-.rm-table-card.is-empty {
-  opacity: 0.45;
-}
-
-.rm-table-card.is-empty .rm-table-val {
-  font-size: 14px;
-  color: #94a3b8;
-  text-shadow: none;
+.rm-table-card[hidden] {
+  display: none !important;
 }
 
 .rm-table-card {
-  border: 1px solid rgba(78, 222, 163, 0.5);
-  background: rgba(0, 15, 55, 0.65);
-  padding: 14px 12px;
-  border-radius: 4px;
+  border: 1.5px solid rgba(78, 222, 163, 0.55);
+  background: rgba(0, 15, 55, 0.72);
+  padding: 20px 18px;
+  border-radius: 6px;
 }
 
 .rm-table-card h4 {
-  font-size: 11px;
-  letter-spacing: 1px;
+  font-size: 13px;
+  letter-spacing: 1.2px;
   color: #f472b6;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .rm-table-formula {
   font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
-  line-height: 1.45;
-  color: #94a3b8;
-  min-height: 32px;
-  margin-bottom: 10px;
-  text-align: left;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #cbd5e1;
+  min-height: 40px;
+  margin-bottom: 14px;
+  text-align: center;
 }
 
 .rm-table-val {
-  font-family: "Source Code Pro", monospace;
-  font-size: 32px;
+  font-family: "Source Code Pro", "Be Vietnam Pro", monospace;
+  font-size: 44px;
   font-weight: 900;
   color: #7dffb8;
-  text-shadow: 0 0 18px rgba(125, 255, 184, 0.85);
+  text-shadow: 0 0 22px rgba(125, 255, 184, 0.85);
 }
 
 .formula-bar {
@@ -2064,30 +2070,30 @@ input {
 
 .result-modal {
   position: relative;
-  width: min(640px, 92vw);
+  width: min(820px, 94vw);
   background: linear-gradient(180deg, #13072b 0%, #060e29 60%, #020617 100%);
-  border: 1.5px solid #d946ef;
-  box-shadow: 0 0 50px rgba(217, 70, 239, 0.4), 0 0 80px rgba(37, 99, 235, 0.25);
-  padding: 30px 28px 24px;
+  border: 2px solid #d946ef;
+  box-shadow: 0 0 60px rgba(217, 70, 239, 0.5), 0 0 100px rgba(37, 99, 235, 0.3);
+  padding: 36px 36px 28px;
   text-align: center;
   overflow: hidden;
 }
 
 .rm-kicker {
-  font-size: 11px;
-  letter-spacing: 2px;
+  font-size: 12px;
+  letter-spacing: 2.5px;
   color: #38bdf8;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-weight: 700;
 }
 
 .rm-title {
   font-family: "Source Code Pro", "Be Vietnam Pro", monospace;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
   color: #ffffff;
-  text-shadow: 0 0 14px rgba(217, 70, 239, 0.8);
-  margin-bottom: 16px;
+  text-shadow: 0 0 16px rgba(217, 70, 239, 0.85);
+  margin-bottom: 22px;
 }
 
 .rm-calc-box {

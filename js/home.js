@@ -2,8 +2,8 @@ const SESSION_KEY = "bcr_admin_session";
 
 const FORMULA_IDLE_1 = "HỆ SỐ PHỤ = α + (β ÷ γ) × δ";
 const FORMULA_IDLE_2 = "HỆ SỐ PHỤ = (A + B) − (C ÷ π) + (D ÷ 6) × √e";
-const CALC_SPIN_MS = 4000;
-const REVEAL_FLICKER_MS = 3500;
+const CALC_SPIN_MS = 2000;
+const REVEAL_FLICKER_MS = 2000;
 
 if (!sessionStorage.getItem(SESSION_KEY)) {
   window.location.replace("index.html");
@@ -184,13 +184,20 @@ function setPanelCalculating(active, cond2Filled) {
   if (spin2) spin2.hidden = !active || !cond2Filled;
 }
 
+function setModalLayout(dualMode) {
+  const tables = document.getElementById("rmDualTables");
+  const card2 = document.getElementById("rmCard2");
+  if (tables) tables.classList.toggle("is-single", !dualMode);
+  if (card2) card2.hidden = !dualMode;
+}
+
 function setModalFlicker(active) {
   const tables = document.getElementById("rmDualTables");
   const card1 = document.getElementById("rmCard1");
   const card2 = document.getElementById("rmCard2");
   if (tables) tables.classList.toggle("flickering", active);
   if (card1) card1.classList.toggle("is-active", active);
-  if (card2) card2.classList.toggle("is-active", active && !card2.classList.contains("is-empty"));
+  if (card2 && !card2.hidden) card2.classList.toggle("is-active", active);
 }
 
 document.querySelectorAll(".check").forEach(function (btn) {
@@ -316,6 +323,7 @@ function resetAllToZero() {
 
   setPanelCalculating(false, false);
   setModalFlicker(false);
+  setModalLayout(false);
 
   const closeBtn = document.getElementById("closeResultBtn");
   if (closeBtn) closeBtn.hidden = false;
@@ -414,19 +422,15 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
       if (rmTitle) rmTitle.textContent = "ĐANG PHÂN TÍCH...";
       if (closeBtn) closeBtn.hidden = true;
 
+      setModalLayout(cond2Filled);
+
       document.getElementById("rmFormula1").textContent = randomFormulaFlash1(data1);
       document.getElementById("rmVal1").textContent = randomMathFlash();
 
-      if (rmCard2) {
-        rmCard2.classList.toggle("is-empty", !cond2Filled);
-        rmCard2.classList.toggle("is-active", cond2Filled);
-      }
+      if (rmCard2) rmCard2.classList.toggle("is-active", cond2Filled);
       if (cond2Filled) {
         document.getElementById("rmFormula2").textContent = randomFormulaFlash2(data2);
         document.getElementById("rmVal2").textContent = randomMathFlash();
-      } else {
-        document.getElementById("rmFormula2").textContent = "Chưa nhập dữ liệu";
-        document.getElementById("rmVal2").textContent = "—";
       }
 
       setModalFlicker(true);
