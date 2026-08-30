@@ -155,6 +155,15 @@ function randomFormulaFlash2(data) {
   return snippets[Math.floor(Math.random() * snippets.length)];
 }
 
+function isCondition1Filled() {
+  const fields = ["slot1", "slot2", "slot3", "slot4"];
+  for (let i = 0; i < fields.length; i += 1) {
+    const val = document.getElementById(fields[i])?.value.trim();
+    if (val !== "") return true;
+  }
+  return false;
+}
+
 function isCondition2Filled() {
   const fields = ["statPatterns", "statHands", "statCards"];
   for (let i = 0; i < fields.length; i += 1) {
@@ -168,7 +177,7 @@ function isCondition2Filled() {
   return hasBead;
 }
 
-function setPanelCalculating(active, cond2Filled) {
+function setPanelCalculating(active, cond1Filled, cond2Filled) {
   const box1 = document.getElementById("formulaBox1");
   const box2 = document.getElementById("formulaBox2");
   const cell1 = document.getElementById("resultCell1");
@@ -176,28 +185,31 @@ function setPanelCalculating(active, cond2Filled) {
   const spin1 = document.getElementById("spinner1");
   const spin2 = document.getElementById("spinner2");
 
-  if (box1) box1.classList.toggle("calculating", active);
+  if (box1) box1.classList.toggle("calculating", active && cond1Filled);
   if (box2) box2.classList.toggle("calculating", active && cond2Filled);
-  if (cell1) cell1.classList.toggle("calculating", active);
+  if (cell1) cell1.classList.toggle("calculating", active && cond1Filled);
   if (cell2) cell2.classList.toggle("calculating", active && cond2Filled);
-  if (spin1) spin1.hidden = !active;
+  if (spin1) spin1.hidden = !active || !cond1Filled;
   if (spin2) spin2.hidden = !active || !cond2Filled;
 }
 
-function setModalLayout(dualMode) {
+function setModalLayout(cond1Filled, cond2Filled) {
   const tables = document.getElementById("rmDualTables");
+  const card1 = document.getElementById("rmCard1");
   const card2 = document.getElementById("rmCard2");
+  const dualMode = cond1Filled && cond2Filled;
   if (tables) tables.classList.toggle("is-single", !dualMode);
-  if (card2) card2.hidden = !dualMode;
+  if (card1) card1.hidden = !cond1Filled;
+  if (card2) card2.hidden = !cond2Filled;
 }
 
-function setModalFlicker(active) {
+function setModalFlicker(active, cond1Filled, cond2Filled) {
   const tables = document.getElementById("rmDualTables");
   const card1 = document.getElementById("rmCard1");
   const card2 = document.getElementById("rmCard2");
   if (tables) tables.classList.toggle("flickering", active);
-  if (card1) card1.classList.toggle("is-active", active);
-  if (card2 && !card2.hidden) card2.classList.toggle("is-active", active);
+  if (card1) card1.classList.toggle("is-active", active && cond1Filled);
+  if (card2 && cond2Filled) card2.classList.toggle("is-active", active);
 }
 
 document.querySelectorAll(".check").forEach(function (btn) {
@@ -291,10 +303,10 @@ if (sideTableInput) {
 }
 
 function resetAllToZero() {
-  if (document.getElementById("slot1")) document.getElementById("slot1").value = 1;
-  if (document.getElementById("slot2")) document.getElementById("slot2").value = 2;
-  if (document.getElementById("slot3")) document.getElementById("slot3").value = 3;
-  if (document.getElementById("slot4")) document.getElementById("slot4").value = 4;
+  if (document.getElementById("slot1")) document.getElementById("slot1").value = "";
+  if (document.getElementById("slot2")) document.getElementById("slot2").value = "";
+  if (document.getElementById("slot3")) document.getElementById("slot3").value = "";
+  if (document.getElementById("slot4")) document.getElementById("slot4").value = "";
   if (document.getElementById("statPatterns")) document.getElementById("statPatterns").value = "";
   if (document.getElementById("statHands")) document.getElementById("statHands").value = "";
   if (document.getElementById("statCards")) document.getElementById("statCards").value = "";
@@ -321,9 +333,9 @@ function resetAllToZero() {
     if (cell) cell.classList.remove("calculating", "flickering");
   });
 
-  setPanelCalculating(false, false);
-  setModalFlicker(false);
-  setModalLayout(false);
+  setPanelCalculating(false, false, false);
+  setModalFlicker(false, false, false);
+  setModalLayout(false, false);
 
   const closeBtn = document.getElementById("closeResultBtn");
   if (closeBtn) closeBtn.hidden = false;
@@ -350,7 +362,14 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
 
   const data1 = executeCalculation1();
   const data2 = executeCalculation2();
+  const cond1Filled = isCondition1Filled();
   const cond2Filled = isCondition2Filled();
+
+  if (!cond1Filled && !cond2Filled) {
+    isAnalyzing = false;
+    btn.disabled = false;
+    return;
+  }
 
   const formulaText1 = document.getElementById("formulaText1");
   const formulaText2 = document.getElementById("formulaText2");
@@ -359,16 +378,22 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
   const modal = document.getElementById("resultModal");
   const rmTitle = document.getElementById("rmTitle");
   const closeBtn = document.getElementById("closeResultBtn");
+  const rmCard1 = document.getElementById("rmCard1");
   const rmCard2 = document.getElementById("rmCard2");
 
-  setModalFlicker(false);
-  setPanelCalculating(true, cond2Filled);
+  setModalFlicker(false, false, false);
+  setPanelCalculating(true, cond1Filled, cond2Filled);
 
   if (resultOut1) {
-    resultOut1.classList.add("calculating");
-    resultOut1.classList.remove("revealed");
-    resultOut1.textContent = "···";
-    resultOut1.style.color = "#00ffe5";
+    resultOut1.classList.remove("calculating", "revealed");
+    if (cond1Filled) {
+      resultOut1.classList.add("calculating");
+      resultOut1.textContent = "···";
+      resultOut1.style.color = "#00ffe5";
+    } else {
+      resultOut1.textContent = "—";
+      resultOut1.style.color = "var(--cyan)";
+    }
   }
   if (resultOut2) {
     resultOut2.classList.remove("calculating", "revealed");
@@ -383,25 +408,33 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
   }
 
   const spinInterval = setInterval(function () {
-    if (formulaText1) formulaText1.textContent = randomFormulaFlash1(data1);
+    if (formulaText1 && cond1Filled) formulaText1.textContent = randomFormulaFlash1(data1);
     if (formulaText2 && cond2Filled) formulaText2.textContent = randomFormulaFlash2(data2);
   }, 110);
   calcIntervals.push(spinInterval);
 
   setTimeout(function () {
     clearCalcIntervals();
-    setPanelCalculating(false, false);
+    setPanelCalculating(false, false, false);
 
-    if (formulaText1) formulaText1.textContent = data1.formulaLong;
+    if (formulaText1) {
+      formulaText1.textContent = cond1Filled ? data1.formulaLong : FORMULA_IDLE_1;
+    }
     if (formulaText2) {
       formulaText2.textContent = cond2Filled ? data2.formulaLong : FORMULA_IDLE_2;
     }
 
     if (resultOut1) {
       resultOut1.classList.remove("calculating");
-      resultOut1.classList.add("revealed");
-      resultOut1.textContent = String(data1.latent);
-      resultOut1.style.color = "#00ffe5";
+      if (cond1Filled) {
+        resultOut1.classList.add("revealed");
+        resultOut1.textContent = String(data1.latent);
+        resultOut1.style.color = "#00ffe5";
+      } else {
+        resultOut1.classList.remove("revealed");
+        resultOut1.textContent = "—";
+        resultOut1.style.color = "var(--cyan)";
+      }
     }
     if (resultOut2) {
       resultOut2.classList.remove("calculating");
@@ -422,26 +455,29 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
       if (rmTitle) rmTitle.textContent = "ĐANG PHÂN TÍCH...";
       if (closeBtn) closeBtn.hidden = true;
 
-      setModalLayout(cond2Filled);
+      setModalLayout(cond1Filled, cond2Filled);
 
-      document.getElementById("rmFormula1").textContent = randomFormulaFlash1(data1);
-      document.getElementById("rmVal1").textContent = randomMathFlash();
-
-      if (rmCard2) rmCard2.classList.toggle("is-active", cond2Filled);
+      if (cond1Filled) {
+        document.getElementById("rmFormula1").textContent = randomFormulaFlash1(data1);
+        document.getElementById("rmVal1").textContent = randomMathFlash();
+      }
       if (cond2Filled) {
         document.getElementById("rmFormula2").textContent = randomFormulaFlash2(data2);
         document.getElementById("rmVal2").textContent = randomMathFlash();
       }
+      if (rmCard1) rmCard1.classList.toggle("is-active", cond1Filled);
+      if (rmCard2) rmCard2.classList.toggle("is-active", cond2Filled);
 
-      setModalFlicker(true);
+      setModalFlicker(true, cond1Filled, cond2Filled);
       modal.hidden = false;
 
       const flickerInterval = setInterval(function () {
-        document.getElementById("rmFormula1").textContent =
-          Math.random() > 0.4 ? randomFormulaFlash1(data1) : data1.formula;
-        document.getElementById("rmVal1").textContent =
-          Math.random() > 0.35 ? randomMathFlash() : String(data1.latent);
-
+        if (cond1Filled) {
+          document.getElementById("rmFormula1").textContent =
+            Math.random() > 0.4 ? randomFormulaFlash1(data1) : data1.formula;
+          document.getElementById("rmVal1").textContent =
+            Math.random() > 0.35 ? randomMathFlash() : String(data1.latent);
+        }
         if (cond2Filled) {
           document.getElementById("rmFormula2").textContent =
             Math.random() > 0.4 ? randomFormulaFlash2(data2) : data2.formula;
@@ -453,12 +489,14 @@ document.getElementById("analyzeBtn").addEventListener("click", function () {
 
       setTimeout(function () {
         clearCalcIntervals();
-        setModalFlicker(false);
+        setModalFlicker(false, cond1Filled, cond2Filled);
 
         if (rmTitle) rmTitle.textContent = "ANALYSIS COMPLETE";
-        document.getElementById("rmFormula1").textContent = data1.formula;
-        document.getElementById("rmVal1").textContent = String(data1.latent);
 
+        if (cond1Filled) {
+          document.getElementById("rmFormula1").textContent = data1.formula;
+          document.getElementById("rmVal1").textContent = String(data1.latent);
+        }
         if (cond2Filled) {
           document.getElementById("rmFormula2").textContent = data2.formula;
           document.getElementById("rmVal2").textContent = String(data2.latent);
@@ -480,7 +518,7 @@ if (closeResultBtn) {
   closeResultBtn.addEventListener("click", function () {
     const modal = document.getElementById("resultModal");
     if (modal) modal.hidden = true;
-    setModalFlicker(false);
+    setModalFlicker(false, false, false);
     resetAllToZero();
   });
 }
