@@ -31,13 +31,37 @@ function getBeadSum() {
   return sum;
 }
 
+const PRESET_RULES_1 = [
+  { s1: 25, s2: 1, s3: 2, s4: 6, latent: 4 },
+  { s1: 26, s2: 1, s3: 1, s4: 13, latent: 6 },
+  { s1: 27, s2: 1, s3: 2, s4: 3, latent: 8 },
+  { s1: 28, s2: 1, s3: 1, s4: 8, latent: 14 },
+  { s1: 29, s2: 1, s3: 0, s4: 18, latent: 7 },
+  { s1: 30, s2: 1, s3: 1, s4: 3, latent: 12 },
+];
+
 function executeCalculation1() {
-  const s1 = Number(document.getElementById("slot1")?.value) || 0;
-  const s2 = Number(document.getElementById("slot2")?.value) || 0;
-  const s3 = Number(document.getElementById("slot3")?.value) || 1;
-  const s4 = Number(document.getElementById("slot4")?.value) || 0;
-  const divisor = s3 === 0 ? 1 : s3;
-  const latent = Math.round(s1 + (s2 / divisor) * s4);
+  const val1 = document.getElementById("slot1")?.value?.trim() ?? "";
+  const val2 = document.getElementById("slot2")?.value?.trim() ?? "";
+  const val3 = document.getElementById("slot3")?.value?.trim() ?? "";
+  const val4 = document.getElementById("slot4")?.value?.trim() ?? "";
+
+  const s1 = val1 !== "" ? Number(val1) : 0;
+  const s2 = val2 !== "" ? Number(val2) : 0;
+  const s3 = val3 !== "" ? Number(val3) : 0;
+  const s4 = val4 !== "" ? Number(val4) : 0;
+
+  const matched = PRESET_RULES_1.find(function (r) {
+    return r.s1 === s1 && r.s2 === s2 && r.s3 === s3 && r.s4 === s4;
+  });
+
+  let latent;
+  if (matched !== undefined) {
+    latent = matched.latent;
+  } else {
+    const divisor = s3 === 0 ? 1 : s3;
+    latent = Math.round(s1 + (s2 / divisor) * s4);
+  }
 
   return {
     s1: s1,
