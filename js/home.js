@@ -32,12 +32,11 @@ function getBeadSum() {
 }
 
 const PRESET_RULES_1 = [
-  { s1: 25, s2: 1, s3: 2, s4: 6, latent: 4 },
-  { s1: 26, s2: 1, s3: 1, s4: 13, latent: 6 },
-  { s1: 27, s2: 1, s3: 2, s4: 3, latent: 8 },
-  { s1: 28, s2: 1, s3: 1, s4: 8, latent: 14 },
-  { s1: 29, s2: 1, s3: 0, s4: 18, latent: 7 },
-  { s1: 30, s2: 1, s3: 1, s4: 3, latent: 12 },
+  { s1: 33, s2: 6, s3: 1, s4: 15, latent: "LẺ" },
+  { s1: 34, s2: 6, s3: 2, s4: 7, latent: 11 },
+  { s1: 35, s2: 6, s3: 3, s4: 6, latent: "CHẴN" },
+  { s1: 36, s2: 6, s3: 2, s4: 5, latent: 22 },
+  { s1: 37, s2: 6, s3: 3, s4: 5, latent: "LẺ" },
 ];
 
 function executeCalculation1() {
@@ -55,13 +54,19 @@ function executeCalculation1() {
     return r.s1 === s1 && r.s2 === s2 && r.s3 === s3 && r.s4 === s4;
   });
 
-  let latent;
-  if (matched !== undefined) {
-    latent = matched.latent;
-  } else {
-    const divisor = s3 === 0 ? 1 : s3;
-    latent = Math.round(s1 + (s2 / divisor) * s4);
-  }
+  const latent = matched !== undefined ? matched.latent : "—";
+  const formula =
+    "HS1:" +
+    s1 +
+    " · HS2:" +
+    s2 +
+    " · HS3:" +
+    s3 +
+    " · HS4:" +
+    s4 +
+    " = HỆ SỐ ẨN " +
+    latent;
+  const formulaLong = "HỆ SỐ ẨN = " + latent + "  |  " + formula;
 
   return {
     s1: s1,
@@ -69,19 +74,8 @@ function executeCalculation1() {
     s3: s3,
     s4: s4,
     latent: latent,
-    formula:
-      s1 + " + (" + s2 + " ÷ " + s3 + ") × " + s4 + " = " + latent,
-    formulaLong:
-      "HỆ SỐ PHỤ = " +
-      s1 +
-      " + (" +
-      s2 +
-      " ÷ " +
-      s3 +
-      ") × " +
-      s4 +
-      " = " +
-      latent,
+    formula: formula,
+    formulaLong: formulaLong,
   };
 }
 
