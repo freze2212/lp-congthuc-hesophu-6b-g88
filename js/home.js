@@ -40,10 +40,11 @@ const PRESET_RULES_1 = [
 ];
 
 function randomParityNumber(parity) {
-  // số ngẫu nhiên 1–99 đúng chẵn/lẻ
-  let n = Math.floor(Math.random() * 50) * 2 + 1; // 1,3,...,99
-  if (parity === "even") n = Math.floor(Math.random() * 49) * 2 + 2; // 2,4,...,98
-  return n;
+  // số ngẫu nhiên dưới 55, đúng chẵn/lẻ
+  if (parity === "even") {
+    return Math.floor(Math.random() * 27) * 2 + 2; // 2,4,...,54
+  }
+  return Math.floor(Math.random() * 27) * 2 + 1; // 1,3,...,53
 }
 
 function executeCalculation1() {
