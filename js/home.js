@@ -40,15 +40,15 @@ const PRESET_RULES_1 = [
 ];
 
 function randomParityNumber(parity) {
-  // số ngẫu nhiên dưới 55, đúng chẵn/lẻ; chẵn tránh 22 (đã dùng ván 4)
+  // số ngẫu nhiên đúng chẵn/lẻ; chẵn < 60 và khác 22 (ván 4)
   if (parity === "even") {
     let n;
     do {
-      n = Math.floor(Math.random() * 27) * 2 + 2; // 2,4,...,54
+      n = Math.floor(Math.random() * 29) * 2 + 2; // 2,4,...,58 (< 60)
     } while (n === 22);
     return n;
   }
-  return Math.floor(Math.random() * 27) * 2 + 1; // 1,3,...,53
+  return Math.floor(Math.random() * 30) * 2 + 1; // 1,3,...,59 (< 60)
 }
 
 function executeCalculation1() {
