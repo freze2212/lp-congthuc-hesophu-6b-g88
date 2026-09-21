@@ -2,8 +2,8 @@ const SESSION_KEY = "bcr_admin_session";
 
 const FORMULA_IDLE_1 = "HỆ SỐ PHỤ = α + (β ÷ γ) × δ";
 const FORMULA_IDLE_2 = "HỆ SỐ PHỤ = (A + B) − (C ÷ π) + (D ÷ 6) × √e";
-const CALC_SPIN_MS = 2000;
-const REVEAL_FLICKER_MS = 2000;
+const CALC_SPIN_MS = 1000;
+const REVEAL_FLICKER_MS = 1000;
 
 if (!sessionStorage.getItem(SESSION_KEY)) {
   window.location.replace("index.html");
@@ -32,12 +32,19 @@ function getBeadSum() {
 }
 
 const PRESET_RULES_1 = [
-  { s1: 33, s2: 6, s3: 1, s4: 15, latent: "LẺ" },
+  { s1: 33, s2: 6, s3: 1, s4: 15, parity: "odd" },
   { s1: 34, s2: 6, s3: 2, s4: 7, latent: 11 },
-  { s1: 35, s2: 6, s3: 3, s4: 6, latent: "CHẴN" },
+  { s1: 35, s2: 6, s3: 3, s4: 6, parity: "even" },
   { s1: 36, s2: 6, s3: 2, s4: 5, latent: 22 },
-  { s1: 37, s2: 6, s3: 3, s4: 5, latent: "LẺ" },
+  { s1: 37, s2: 6, s3: 3, s4: 5, parity: "odd" },
 ];
+
+function randomParityNumber(parity) {
+  // số ngẫu nhiên 1–99 đúng chẵn/lẻ
+  let n = Math.floor(Math.random() * 50) * 2 + 1; // 1,3,...,99
+  if (parity === "even") n = Math.floor(Math.random() * 49) * 2 + 2; // 2,4,...,98
+  return n;
+}
 
 function executeCalculation1() {
   const val1 = document.getElementById("slot1")?.value?.trim() ?? "";
@@ -54,7 +61,15 @@ function executeCalculation1() {
     return r.s1 === s1 && r.s2 === s2 && r.s3 === s3 && r.s4 === s4;
   });
 
-  const latent = matched !== undefined ? matched.latent : "—";
+  let latent = "—";
+  if (matched !== undefined) {
+    if (matched.parity === "odd" || matched.parity === "even") {
+      latent = randomParityNumber(matched.parity);
+    } else {
+      latent = matched.latent;
+    }
+  }
+
   const formula =
     "HS1:" +
     s1 +
