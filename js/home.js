@@ -389,6 +389,19 @@ function clearCalcIntervals() {
   calcIntervals = [];
 }
 
+document.addEventListener("keydown", function (e) {
+  if (e.key !== "Enter") return;
+  const modal = document.getElementById("resultModal");
+  const connect = document.getElementById("connectOverlay");
+  if (modal && !modal.hidden) return;
+  if (connect && !connect.hidden) return;
+  if (e.target && e.target.id === "sideTableInput") return;
+  const btn = document.getElementById("analyzeBtn");
+  if (!btn || btn.disabled || isAnalyzing) return;
+  e.preventDefault();
+  btn.click();
+});
+
 document.getElementById("analyzeBtn").addEventListener("click", function () {
   if (isAnalyzing) return;
   isAnalyzing = true;
