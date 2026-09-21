@@ -40,9 +40,13 @@ const PRESET_RULES_1 = [
 ];
 
 function randomParityNumber(parity) {
-  // số ngẫu nhiên dưới 55, đúng chẵn/lẻ
+  // số ngẫu nhiên dưới 55, đúng chẵn/lẻ; chẵn tránh 22 (đã dùng ván 4)
   if (parity === "even") {
-    return Math.floor(Math.random() * 27) * 2 + 2; // 2,4,...,54
+    let n;
+    do {
+      n = Math.floor(Math.random() * 27) * 2 + 2; // 2,4,...,54
+    } while (n === 22);
+    return n;
   }
   return Math.floor(Math.random() * 27) * 2 + 1; // 1,3,...,53
 }
