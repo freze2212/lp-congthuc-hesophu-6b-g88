@@ -35,12 +35,12 @@ const PRESET_RULES_1 = [
   { s1: 33, s2: 6, s3: 1, s4: 15, parity: "odd" },
   { s1: 34, s2: 6, s3: 2, s4: 7, latent: 11 },
   { s1: 35, s2: 6, s3: 3, s4: 6, parity: "even" },
-  { s1: 36, s2: 6, s3: 2, s4: 5, latent: 22 },
-  { s1: 37, s2: 6, s3: 3, s4: 5, parity: "odd" },
+  { s1: 36, s2: 6, s3: 2, s4: 5, latent: 33 },
+  { s1: 37, s2: 6, s3: 3, s4: 5, parity: "even" },
 ];
 
 function randomParityNumber(parity) {
-  // số ngẫu nhiên đúng chẵn/lẻ; chẵn < 60 và khác 22 (ván 4)
+  // số ngẫu nhiên đúng chẵn/lẻ; chẵn < 60 và khác 22 (ván 3 đã ra 22)
   if (parity === "even") {
     let n;
     do {
